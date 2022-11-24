@@ -4,13 +4,16 @@ import (
 	"context"
 
 	"github.com/sirupsen/logrus"
+	"github.com/wenruo95/garage/common"
+	"github.com/wenruo95/garage/core/config"
 )
 
 func main() {
-	ctx := context.Background()
-	entry := logrus.WithContext(ctx).WithField("hello", "world")
-	entry.Infof("hello")
+	logger := logrus.WithContext(context.Background()).WithField("cmd", "start_process")
+	if err := config.Parse(); err != nil {
+		logger.Errorf("load config error:%v", err)
+		return
+	}
 
-	logrus.WithContext(ctx).Infof("hello2")
-	logrus.Infof("hello")
+	logger.Infof("config:%v", common.JsonStr(config.Get()))
 }
